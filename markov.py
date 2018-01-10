@@ -50,35 +50,36 @@ def make_chains(text_string):
     for i in range(len(words) - 1):
         ngram = tuple(words[i: i + n])
         if i >= len(words) - n:
-            chains[ngram] = []
+            chains[ngram] = None
         else:
+            nth_word = words[i + n]
             if ngram not in chains:
-                chains[ngram] = [words[i + n]]
+                chains[ngram] = [nth_word]
             else:
-                chains[ngram].append(words[i + n])
-    return chains
+                chains[ngram].append(nth_word)
+    return (chains, n)
 
-def make_text(chains):
+def make_text(chains, n):
     """Return text from chains."""
 
     words = []
 
     while len(words) == 0:
-        first_key = choice(chains.keys())
-        if chains[first_key] == []:
+        for key in chains.keys():
+            if key[0][0].isupper():
+                first_key = key
+
+        if not chains[first_key]:
             continue
         else:
-            if first_key[0][0].isupper():
-                words.extend(list(first_key))
-                rand_value = choice(chains[first_key])
-                words.append(rand_value)
-            else:
-                continue
+            words.extend(list(first_key))
+            rand_value = choice(chains[first_key])
+            words.append(rand_value)
 
     i = 1
     while True:
         new_key = tuple(words[i: i + n])
-        if chains[new_key] == []:
+        if not chains[new_key]:
             break
         else:
             rand_value = choice(chains[new_key])
@@ -99,9 +100,9 @@ input_path2 = sys.argv[2]
 combined_text = open_and_read_file(input_path1) + open_and_read_file(input_path2)
 
 # Get a Markov chain
-chains = make_chains(combined_text)
+chains, number_ngram = make_chains(combined_text)
 
 # Produce random text
-random_text = make_text(chains)
+random_text = make_text(chains, number_ngram)
 
 print random_text
