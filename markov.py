@@ -44,20 +44,19 @@ def make_chains(text_string):
     """
 
     chains = {}
-
+    n = int(raw_input("Enter the number of ngrams you want? >"))
     # your code goes here
     words = text_string.split()
     for i in range(len(words) - 1):
-        bigram = (words[i], words[i + 1])
-        if i >= len(words) - 2:
-            chains[bigram] = []
+        ngram = tuple(words[i: i + n])
+        if i >= len(words) - n:
+            chains[ngram] = []
         else:
-            if bigram not in chains:
-                chains[bigram] = [words[i + 2]]
+            if ngram not in chains:
+                chains[ngram] = [words[i + n]]
             else:
-                chains[bigram].append(words[i + 2])
+                chains[ngram].append(words[i + n])
     return chains
-
 
 def make_text(chains):
     """Return text from chains."""
@@ -78,7 +77,7 @@ def make_text(chains):
 
     i = 1
     while True:
-        new_key = (words[i], words[i + 1])
+        new_key = tuple(words[i: i + n])
         if chains[new_key] == []:
             break
         else:
