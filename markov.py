@@ -12,7 +12,9 @@ def open_and_read_file(file_path):
     """
 
     # your code goes here
-    text_string = open(file_path).read()
+    text_file = open(file_path)
+    text_string= text_file.read()
+    text_file.close()
     return text_string
 
 
@@ -62,10 +64,17 @@ def make_text(chains):
 
     words = []
 
-    first_key = choice(chains.keys())
-    words.extend(list(first_key))
-    rand_value = choice(chains[first_key])
-    words.append(rand_value)
+    while len(words) == 0:
+        first_key = choice(chains.keys())
+        if chains[first_key] == []:
+            continue
+        else:
+            if first_key[0][0].isupper():
+                words.extend(list(first_key))
+                rand_value = choice(chains[first_key])
+                words.append(rand_value)
+            else:
+                continue
 
     i = 1
     while True:
@@ -84,13 +93,14 @@ def make_text(chains):
     return " ".join(words)
 
 
-input_path = sys.argv[1]
+input_path1 = sys.argv[1]
+input_path2 = sys.argv[2]
 
 # Open the file and turn it into one long string
-input_text = open_and_read_file(input_path)
+combined_text = open_and_read_file(input_path1) + open_and_read_file(input_path2)
 
 # Get a Markov chain
-chains = make_chains(input_text)
+chains = make_chains(combined_text)
 
 # Produce random text
 random_text = make_text(chains)
