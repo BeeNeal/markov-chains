@@ -64,20 +64,15 @@ def make_text(chains, n):
 
     words = []
 
-    while len(words) == 0:
-        for key in chains.keys():
-            if key[0][0].isupper():
-                first_key = key
+    capital_keys = [key for key in chains.keys() if key[0][0].isupper() and chains[key] != None]
+    first_key = choice(capital_keys)
 
-        if not chains[first_key]:
-            continue
-        else:
-            words.extend(list(first_key))
-            rand_value = choice(chains[first_key])
-            words.append(rand_value)
+    words.extend(list(first_key))
+    rand_value = choice(chains[first_key])
+    words.append(rand_value)
 
     i = 1
-    while True:
+    while len(words) < 50:
         new_key = tuple(words[i: i + n])
         if not chains[new_key]:
             break
@@ -105,4 +100,4 @@ chains, number_ngram = make_chains(combined_text)
 # Produce random text
 random_text = make_text(chains, number_ngram)
 
-print random_text
+print "\n", random_text
